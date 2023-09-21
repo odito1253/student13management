@@ -1,0 +1,83 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+    int data;
+    struct node *next;
+};
+typedef struct node Node;
+
+Node *traverse(Node *p) {
+    while (p != NULL) {
+        printf("element: %d\n", p->data);
+        p = p->next;
+    }
+}
+
+Node *deleteNode(Node *head, int valueToDelete) {
+
+
+
+    if (head->data == valueToDelete) {
+        Node *temp = head;
+        head = head->next;
+        free(temp);
+        return head;
+    }
+
+
+    Node *prev = head;
+    Node *current = head->next;
+    while (current != NULL && current->data != valueToDelete) {
+        prev = current;
+        current = current->next;
+    }
+
+    if (current != NULL) {
+        prev->next = current->next;
+        free(current);
+    } else {
+        printf("Node with value %d not found in the linked list.\n", valueToDelete);
+    }
+
+    return head;
+}
+
+int main() {
+    Node *head, *second, *third, *fourth, *fifth;
+    head = (Node *)malloc(sizeof(Node));
+    second = (Node *)malloc(sizeof(Node));
+    third = (Node *)malloc(sizeof(Node));
+    fourth = (Node *)malloc(sizeof(Node));
+    fifth = (Node *)malloc(sizeof(Node));
+
+    head->data = 5;
+    second->data = 10;
+    third->data = 15;
+    fourth->data = 20;
+    fifth->data = 25;
+
+    head->next = second;
+    second->next = third;
+    third->next = fourth;
+    fourth->next = fifth;
+    fifth->next = NULL;
+
+    printf("Original linked list:\n");
+    traverse(head);
+
+    int valueToDelete = 15;
+
+    printf("\nAfter deleting node with value %d:\n", valueToDelete);
+    head = deleteNode(head, valueToDelete);
+    traverse(head);
+
+    while (head != NULL) {
+        Node *temp = head;
+        head = head->next;
+        free(temp);
+    }
+
+    return 0;
+}
+
