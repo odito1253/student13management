@@ -1,0 +1,86 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+    int data;
+    struct node *next;
+};
+typedef struct node Node;
+
+Node *traverse(Node *p) {
+    while (p != NULL) {
+        printf("element: %d\n", p->data);
+        p = p->next;
+    }
+}
+
+
+Node *insertNode(Node *head, int valueToInsertAfter, int newValue) {
+    Node *newNode = (Node *)malloc(sizeof(Node));
+
+
+    newNode->data = newValue;
+    newNode->next = NULL;
+
+    if (head == NULL) {
+        printf("The linked list is empty. Cannot insert after %d.\n", valueToInsertAfter);
+        free(newNode);
+        return head;
+    }
+
+    Node *current = head;
+    while (current != NULL && current->data != valueToInsertAfter) {
+        current = current->next;
+    }
+
+    if (current == NULL) {
+        printf("Node with value %d not found in the linked list. Cannot insert.\n", valueToInsertAfter);
+        free(newNode);
+    } else {
+        newNode->next = current->next;
+        current->next = newNode;
+    }
+
+    return head;
+}
+
+int main() {
+    Node *head, *second, *third, *fourth, *fifth;
+    head = (Node *)malloc(sizeof(Node));
+    second = (Node *)malloc(sizeof(Node));
+    third = (Node *)malloc(sizeof(Node));
+    fourth = (Node *)malloc(sizeof(Node));
+    fifth = (Node *)malloc(sizeof(Node));
+
+    head->data = 5;
+    second->data = 10;
+    third->data = 20;
+    fourth->data = 25;
+    fifth->data = 30;
+
+    head->next = second;
+    second->next = third;
+    third->next = fourth;
+    fourth->next = fifth;
+    fifth->next = NULL;
+
+    printf("Original linked list:\n");
+    traverse(head);
+
+    int valueToInsertAfter = 10;
+    int newValue = 15;
+
+    printf("\nInserting %d after node with value %d:\n", newValue, valueToInsertAfter);
+    head = insertNode(head, valueToInsertAfter, newValue);
+    traverse(head);
+
+
+    while (head != NULL) {
+        Node *temp = head;
+        head = head->next;
+        free(temp);
+    }
+
+    return 0;
+}
+
