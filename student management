@@ -1,0 +1,290 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
+struct Student {
+    char name[50];
+    char password[50];
+    struct Student *next;
+};
+
+
+struct AdmissionForm {
+    char Department [50];
+    char name[50];
+    int age;
+    char fatherName[50];
+    char motherName[50];
+    char city[50];
+    char email[100];
+    char phoneNumber[15];
+    char bloodGroup[5];
+    struct AdmissionForm *next;
+};
+
+
+struct Student *createStudent(const char *name, const char *password) {
+    struct Student *newStudent = (struct Student *)malloc(sizeof(struct Student));
+    if (newStudent == NULL) {
+        printf("failed!\n");
+        exit(1);
+    }
+
+    strncpy(newStudent->name, name, sizeof(newStudent->name));
+    strncpy(newStudent->password, password, sizeof(newStudent->password));
+    newStudent->next = NULL;
+
+    return newStudent;
+}
+
+
+struct AdmissionForm *createAdmissionForm(const char *name, int age, const char *fatherName, const char *motherName,
+                                         const char *city, const char *email, const char *phoneNumber, const char *bloodGroup) {
+    struct AdmissionForm *newForm = (struct AdmissionForm *)malloc(sizeof(struct AdmissionForm));
+    if (newForm == NULL) {
+        printf("failed!\n");
+        exit(1);
+    }
+
+    strncpy(newForm->name, name, sizeof(newForm->name));
+    newForm->age = age;
+    strncpy(newForm->fatherName, fatherName, sizeof(newForm->fatherName));
+    strncpy(newForm->motherName, motherName, sizeof(newForm->motherName));
+    strncpy(newForm->city, city, sizeof(newForm->city));
+    strncpy(newForm->email, email, sizeof(newForm->email));
+    strncpy(newForm->phoneNumber, phoneNumber, sizeof(newForm->phoneNumber));
+    strncpy(newForm->bloodGroup, bloodGroup, sizeof(newForm->bloodGroup));
+    newForm->next = NULL;
+
+    return newForm;
+}
+
+void addStudent(struct Student **head, struct Student *newStudent) {
+    if (*head == NULL) {
+        *head = newStudent;
+    } else {
+        struct Student *current = *head;
+        while (current->next != NULL) {
+            current = current->next;
+        }
+        current->next = newStudent;
+    }
+}
+
+void displayAppliedStudents(struct AdmissionForm *head) {
+    printf("List of Applied Students:\n");
+    struct AdmissionForm *current = head;
+    while (current != NULL) {
+        displayAdmissionForm(current);  
+        current = current->next;
+    }
+}
+
+
+void addAdmissionForm(struct AdmissionForm **head, struct AdmissionForm *newForm) {
+    if (*head == NULL) {
+        *head = newForm;
+    } else {
+        struct AdmissionForm *current = *head;
+        while (current->next != NULL) {
+            current = current->next;
+        }
+        current->next = newForm;
+    }
+}
+
+
+void displayStudents(struct Student *head) {
+    printf("List of Students:\n");
+    struct Student *current = head;
+    while (current != NULL) {
+        printf("Name: %s\n", current->name);
+        current = current->next;
+    }
+}
+
+
+void displayAdmissionForm(struct AdmissionForm *form) {
+    printf("Admission Form Details:\n");
+    printf("Name: %s\n", form->name);
+    printf("Age: %d\n", form->age);
+    printf("Father's Name: %s\n", form->fatherName);
+    printf("Mother's Name: %s\n", form->motherName);
+    printf("City: %s\n", form->city);
+    printf("Email: %s\n", form->email);
+    printf("Phone Number: %s\n", form->phoneNumber);
+    printf("Blood Group: %s\n", form->bloodGroup);
+}
+
+int main() {
+    struct Student *studentList = NULL;
+    struct AdmissionForm *admissionForms = NULL;
+
+    int choice;
+    do {
+        printf("DIU Admission Page\n");
+        printf("1. Create Your Account\n");
+        printf("2. Login\n");
+        printf("3. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: {
+                char name[50];
+                char password[50];
+
+                printf("Enter Student Name: ");
+                scanf("%s", name);
+                printf("Enter Password: ");
+                scanf("%s", password);
+
+                struct Student *newStudent = createStudent(name, password);
+                addStudent(&studentList, newStudent);
+
+                printf("Student account created successfully!\n");
+                break;
+            }
+
+            case 2: {
+                char name[50];
+                char password[50];
+
+                printf("Enter Student Name: ");
+                scanf("%s", name);
+                printf("Enter Password: ");
+                scanf("%s", password);
+
+                struct Student *current = studentList;
+                int found = 0;
+                while (current != NULL) {
+                    if (strcmp(current->name, name) == 0 && strcmp(current->password, password) == 0) {
+                        found = 1;
+                        break;
+                    }
+                    current = current->next;
+                }
+
+                if (found) {
+                    printf("Login successful!\n");
+                    int mainChoice;
+                    do {
+                        printf("Main Menu\n");
+                        printf("1. Departments\n");
+                        printf("2. About\n");
+                        printf("3. Apply\n");
+                        printf("4. Logout\n");
+                        printf("Enter your choice: ");
+                        scanf("%d", &mainChoice);
+
+                        switch (mainChoice) {
+                            case 1: {
+                                printf("\nDepartments\n");
+                                printf("1. CSE- in Faculty 20 teachers.\n   student 2000 running and 1500 alumni.\n  Fees 4 years- 8,00,000 taka.\n   Minimum Total GPA- 9.00 \n\n");
+                                printf("2. SWE- in Faculty 25 teachers.\n   student 1800 running and 1000 alumni.\n  Fees 4 years- 7,50,000 taka.\n   Minimum Total GPA- 8.75\n\n");
+                                printf("3. NFE- in Faculty 20 teachers.\n   student 1000 running and 800 alumni.\n  Fees 4 years- 5,00,000 taka.\n  Minimum Total GPA- 8.50\n\n");
+                                printf("4. JMC- in Faculty 22 teachers.\n   student 500 running and 500 alumni.\n  Fees 4 years- 7,00,000 taka.\n   Minimum Total GPA- 8.50\n\n");
+                                printf("5. Pharmacy- in Faculty 20 teachers.\n   student 150 running and 400 alumni.\n  Fees 4 years- 9,60,000 taka.\n   Minimum Total GPA- 8.00\n\n");
+
+                                
+                                break;
+                            }
+
+                            case 2:
+                                printf("Daffodil International University (DIU) is a private university located in Dhaka, Bangladesh. It was established in 2002 and has since grown to become one of the prominent private universities in the country. Here are some details about Daffodil International University.\nLocation: DIU is situated in Dhanmondi, a residential area in Dhaka, the capital city of Bangladesh.\n");
+                               
+                                break;
+
+                            case 3: {
+                                printf("Apply for Admission\n");
+                                char Department [50];
+                                char name[50];
+                                int age;
+                                char fatherName[50];
+                                char motherName[50];
+                                char city[50];
+                                char email[100];
+                                char phoneNumber[15];
+                                char bloodGroup[5];
+                                printf("Enter Department: ");
+                                scanf("%s", Department);
+                                printf("Enter Name: ");
+                                scanf("%s", name);
+                                printf("Enter Age: ");
+                                scanf("%d", &age);
+                                printf("Enter Father's Name: ");
+                                scanf("%s", fatherName);
+                                printf("Enter Mother's Name: ");
+                                scanf("%s", motherName);
+                                printf("Enter City: ");
+                                scanf("%s", city);
+                                printf("Enter Email: ");
+                                scanf("%s", email);
+                                printf("Enter Phone Number: ");
+                                scanf("%s", phoneNumber);
+                                printf("Enter Blood Group: ");
+                                scanf("%s", bloodGroup);
+
+
+                                struct AdmissionForm *newForm = createAdmissionForm(name, age, fatherName, motherName, city, email, phoneNumber, bloodGroup);
+                                addAdmissionForm(&admissionForms, newForm);
+
+                                printf("Admission form submitted successfully!\n");
+                                    printf("\nYour input data:\n");
+                                    printf("Department: %s\n", Department);
+                                    printf("Name: %s\n", name);
+                                    printf("Age: %d\n", age);
+                                    printf("Father's Name: %s\n",fatherName);
+                                    printf("Mother's Name: %s\n",motherName);
+                                    printf("City: %s\n", city);
+                                    printf("Email: %s\n",email);
+                                    printf("Phone Number: %s\n",phoneNumber);
+                                    printf("Blood Group: %s\n", bloodGroup);
+
+
+
+                                break;
+                            }
+
+                            case 4:
+                                printf("Logged out successfully!\n");
+                                break;
+
+                            default:
+                                printf("Invalid choice. Please enter a valid option.\n");
+                        }
+                    } while (mainChoice != 4);
+                } else {
+                    printf("Login failed. Student not found or incorrect password.\n");
+                }
+                break;
+            }
+
+         
+
+            case 3:
+                printf("Exiting the program. Goodbye!\n");
+                break;
+
+            default:
+                printf("Invalid choice. Please enter a valid option.\n");
+        }
+    } while (choice != 3);
+
+    struct Student *currentStudent = studentList;
+    while (currentStudent != NULL) {
+        struct Student *temp = currentStudent;
+        currentStudent = currentStudent->next;
+        free(temp);
+    }
+
+    struct AdmissionForm *currentForm = admissionForms;
+    while (currentForm != NULL) {
+        struct AdmissionForm *temp = currentForm;
+        currentForm = currentForm->next;
+        free(temp);
+    }
+
+    return 0;
+}
